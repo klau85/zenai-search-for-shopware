@@ -1,0 +1,31 @@
+{
+  "name": "zenai/zenai-search-plugin",
+  "description": "ZenAI Search integration plugin for Shopware 6.7",
+  "version": "1.0.0",
+  "type": "shopware-platform-plugin",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "ZenAI"
+    }
+  ],
+  "require": {
+    "shopware/core": "6.7.*"
+  },
+  "extra": {
+    "shopware-plugin-class": "Zenai\\ZenaiSearchPlugin\\ZenaiSearchPlugin",
+    "label": {
+      "en-GB": "ZenAI Search Plugin",
+      "de-DE": "ZenAI Such-Plugin"
+    },
+    "description": {
+      "en-GB": "Adds ZenAI Search configuration with API token field.",
+      "de-DE": "Fügt ZenAI-Suchkonfiguration mit API-Token-Feld hinzu."
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Zenai\\ZenaiSearchPlugin\\": "src/"
+    }
+  }
+}

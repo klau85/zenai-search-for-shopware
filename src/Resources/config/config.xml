@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+    <card>
+        <title>ZenAI Settings</title>
+        <input-field type="password">
+            <name>apiToken</name>
+            <label>API token</label>
+            <description>Enter your ZenAI API token for authenticating with the ZenAI API.</description>
+            <helpText>The API token is generated from your ZenAI Dashboard</helpText>
+            <required>true</required>
+        </input-field>
+    </card>
+</config>
