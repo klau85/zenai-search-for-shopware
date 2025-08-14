@@ -1,0 +1,14 @@
+{% sw_extends '@Storefront/storefront/layout/header/search.html.twig' %}
+
+{% block layout_header_close_button %}
+    {{ parent() }}
+    <button type="button"
+            class="btn zenai-search-btn"
+            data-zenai-search-btn
+            aria-label="ZenAI search"
+        >
+        <span class="header-search-icon" title="Start AI-powered search">
+            {% sw_icon 'sparkles' style { pack: 'solid' } %}
+        </span>
+    </button>
+{% endblock %}

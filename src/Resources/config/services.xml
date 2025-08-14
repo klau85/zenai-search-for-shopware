@@ -3,6 +3,8 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <!-- No services yet. This file is kept for future extensions. -->
+        <service id="Zenai\ZenaiSearchPlugin\Decorator\ZenaiProductSearchRoute" decorates="Shopware\Core\Content\Product\SalesChannel\Search\ResolvedCriteriaProductSearchRoute">
+            <argument type="service" id="Zenai\ZenaiSearchPlugin\Decorator\ZenaiProductSearchRoute.inner" />
+        </service>
     </services>
 </container>
