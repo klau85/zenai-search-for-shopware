@@ -51,7 +51,6 @@ class ZenaiSearchPlugin extends Plugin
             ['key' => 'id', 'mappedKey' => 'product_id'],
             ['key' => 'translations.DEFAULT.description', 'mappedKey' => 'description'],
             ['key' => 'translations.DEFAULT.name', 'mappedKey' => 'title'],
-            // In case of multiple categories, Shopware will export a delimited list using the profile's delimiter
             ['key' => 'categories', 'mappedKey' => 'category'],
         ];
 
@@ -65,7 +64,6 @@ class ZenaiSearchPlugin extends Plugin
             'enclosure' => '"',
             'mapping' => $mapping,
             'config' => [
-                // Use comma inside fields; for multi-values Shopware uses the profile delimiter
                 'createEntities' => false,
                 'updateEntities' => false,
             ],
