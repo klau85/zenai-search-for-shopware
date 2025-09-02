@@ -6,5 +6,9 @@
         <service id="Zenai\ZenaiSearchPlugin\Decorator\ZenaiProductSearchRoute" decorates="Shopware\Core\Content\Product\SalesChannel\Search\ResolvedCriteriaProductSearchRoute">
             <argument type="service" id="Zenai\ZenaiSearchPlugin\Decorator\ZenaiProductSearchRoute.inner" />
         </service>
+
+        <service id="Zenai\ZenaiSearchPlugin\Subscriber\ExportSubscriber">
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>
