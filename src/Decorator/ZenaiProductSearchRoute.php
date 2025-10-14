@@ -36,8 +36,8 @@ class ZenaiProductSearchRoute extends AbstractProductSearchRoute
         $originalSearch = $request->get('search');
         $hadQuery = false;
         $hadRequest = false;
-        $hadAttr = false;
         $overrideSearch = false;
+        $recommendedIds = [];
 
         if ($isZenaiSearch) {
             $searchString = is_string($originalSearch) ? $originalSearch : '';
@@ -51,7 +51,6 @@ class ZenaiProductSearchRoute extends AbstractProductSearchRoute
                 // Save and temporarily remove 'search' so ProductSearchRoute won't build a search query
                 $hadQuery = $request->query->has('search');
                 $hadRequest = $request->request->has('search');
-                $hadAttr = $request->attributes->has('search');
 
                 if ($hadQuery) {
                     $request->query->remove('search');
@@ -59,14 +58,15 @@ class ZenaiProductSearchRoute extends AbstractProductSearchRoute
                 if ($hadRequest) {
                     $request->request->remove('search');
                 }
-                if ($hadAttr) {
-                    $request->attributes->remove('search');
-                }
             }
         }
 
         // Execute the actual product search without the search term influencing the query
         $response = $this->decorated->load($request, $context, $criteria);
+
+        if ($overrideSearch && $recommendedIds !== []) {
+            $this->updateListing($response, $recommendedIds);
+        }
 
         // Restore the original 'search' on the Request for downstream consumers
         if ($overrideSearch) {
@@ -75,9 +75,6 @@ class ZenaiProductSearchRoute extends AbstractProductSearchRoute
             }
             if ($hadRequest) {
                 $request->request->set('search', $originalSearch);
-            }
-            if ($hadAttr || (!$hadQuery && !$hadRequest)) {
-                $request->attributes->set('search', $originalSearch);
             }
         }
 
@@ -91,5 +88,29 @@ class ZenaiProductSearchRoute extends AbstractProductSearchRoute
         }
 
         return false;
+    }
+
+    private function updateListing(
+        ProductSearchRouteResponse $response,
+        array $recommendedIds
+    ): void
+    {
+        $listingResult = $response->getListingResult();
+        $elements = $listingResult->getElements();
+        $sorted = [];
+
+        foreach ($recommendedIds as $recommendedId) {
+            if (\is_string($recommendedId) && array_key_exists($recommendedId, $elements)) {
+                $sorted[$recommendedId] = $elements[$recommendedId];
+            }
+        }
+
+        if ($sorted !== []) {
+            $listingResult->clear();
+
+            foreach ($sorted as $entity) {
+                $listingResult->add($entity);
+            }
+        }
     }
 }
