@@ -60,7 +60,7 @@ class ZenaiSearchPlugin extends Plugin
             'systemDefault' => false,
             'sourceEntity' => 'product',
             'fileType' => 'text/csv',
-            'delimiter' => ';',
+            'delimiter' => ',',
             'enclosure' => '"',
             'mapping' => $mapping,
             'config' => [

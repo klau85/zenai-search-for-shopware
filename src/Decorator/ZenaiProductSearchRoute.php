@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Zenai\ZenaiSearchPlugin\Decorator;
@@ -8,6 +9,7 @@ use Shopware\Core\Content\Product\SalesChannel\Search\ProductSearchRouteResponse
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\HttpFoundation\Request;
+use Zenai\ZenaiSearchPlugin\Service\ZenaiAPIClient;
 
 /**
  * Decorates the default product search. When the zenai flag is present in the request
@@ -17,7 +19,10 @@ class ZenaiProductSearchRoute extends AbstractProductSearchRoute
 {
     public const ZENAI_FLAG = 'zenai';
 
-    public function __construct(private readonly AbstractProductSearchRoute $decorated) {
+    public function __construct(
+        private readonly AbstractProductSearchRoute $decorated,
+        private readonly ZenaiAPIClient $recommendationClient,
+    ) {
     }
 
     public function getDecorated(): AbstractProductSearchRoute
@@ -28,34 +33,43 @@ class ZenaiProductSearchRoute extends AbstractProductSearchRoute
     public function load(Request $request, SalesChannelContext $context, Criteria $criteria): ProductSearchRouteResponse
     {
         $isZenaiSearch = $this->isZenaiSearch($request);
+        $originalSearch = $request->get('search');
+        $hadQuery = false;
+        $hadRequest = false;
+        $hadAttr = false;
+        $overrideSearch = false;
 
         if ($isZenaiSearch) {
-            // Save and temporarily remove 'search' so ProductSearchRoute won't build search query
-            $originalSearch = $request->get('search');
-            $hadQuery = $request->query->has('search');
-            $hadRequest = $request->request->has('search');
-            $hadAttr = $request->attributes->has('search');
+            $searchString = is_string($originalSearch) ? $originalSearch : '';
+            $recommendedIds = $this->recommendationClient->fetchProductIds($searchString);
 
-            if ($hadQuery) {
-                $request->query->remove('search');
-            }
-            if ($hadRequest) {
-                $request->request->remove('search');
-            }
-            if ($hadAttr) {
-                $request->attributes->remove('search');
-            }
+            if ($recommendedIds !== []) {
+                $criteria->setTitle('zenai-overridden-search');
+                $criteria->setIds($recommendedIds);
+                $overrideSearch = true;
 
-            $criteria->setTitle('zenai-overridden-search');
-            // make zenai api call to get productIds
-            // $criteria->setIds(['11dc680240b04f469ccba354cbf0b967', '2a88d9b59d474c7e869d8071649be43c']);
+                // Save and temporarily remove 'search' so ProductSearchRoute won't build a search query
+                $hadQuery = $request->query->has('search');
+                $hadRequest = $request->request->has('search');
+                $hadAttr = $request->attributes->has('search');
+
+                if ($hadQuery) {
+                    $request->query->remove('search');
+                }
+                if ($hadRequest) {
+                    $request->request->remove('search');
+                }
+                if ($hadAttr) {
+                    $request->attributes->remove('search');
+                }
+            }
         }
 
         // Execute the actual product search without the search term influencing the query
         $response = $this->decorated->load($request, $context, $criteria);
 
         // Restore the original 'search' on the Request for downstream consumers
-        if ($isZenaiSearch) {
+        if ($overrideSearch) {
             if ($hadQuery) {
                 $request->query->set('search', $originalSearch);
             }
