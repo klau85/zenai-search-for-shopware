@@ -12,6 +12,7 @@ export default class ZenaiSearchPlugin extends PluginBaseClass {
         this.storageKey = 'zenaiSearchPlugin.mode';
         this.defaultMode = this.el.value || 'ai';
 
+        this.setupSuggestInterceptor();
         this.applyStoredMode();
 
         this.onModeChange = this.onModeChange.bind(this);
@@ -73,9 +74,7 @@ export default class ZenaiSearchPlugin extends PluginBaseClass {
             return;
         }
 
-        const isAiSearch = this.el.value === 'ai';
-
-        if (isAiSearch) {
+        if (this.isAiMode()) {
             if (!this.hiddenField) {
                 this.hiddenField = document.createElement('input');
                 this.hiddenField.type = 'hidden';
@@ -84,13 +83,56 @@ export default class ZenaiSearchPlugin extends PluginBaseClass {
             }
 
             this.hiddenField.value = '1';
+        } else if (this.hiddenField) {
+            this.hiddenField.remove();
+            this.hiddenField = null;
+        }
 
+        this.updateSuggestBehaviour();
+    }
+
+    isAiMode() {
+        return this.el.value === 'ai';
+    }
+
+    setupSuggestInterceptor() {
+        if (!window?.PluginManager || !window.PluginManager.getPluginInstanceFromElement) {
             return;
         }
 
-        if (this.hiddenField) {
-            this.hiddenField.remove();
-            this.hiddenField = null;
+        const searchWidget = window.PluginManager.getPluginInstanceFromElement(this.form, 'SearchWidget');
+
+        if (!searchWidget) {
+            return;
+        }
+
+        this.searchWidget = searchWidget;
+
+        if (this.searchWidget._zenaiOriginalSuggest) {
+            return;
+        }
+
+        const originalSuggest = this.searchWidget._suggest;
+        const zenaiPlugin = this;
+
+        this.searchWidget._zenaiOriginalSuggest = originalSuggest;
+        this.searchWidget._suggest = function zenaiSuggest(value) {
+            if (zenaiPlugin.isAiMode()) {
+                this._clearSuggestResults();
+                return;
+            }
+
+            return originalSuggest.call(this, value);
+        };
+    }
+
+    updateSuggestBehaviour() {
+        if (!this.searchWidget) {
+            return;
+        }
+
+        if (this.isAiMode()) {
+            this.searchWidget._clearSuggestResults();
         }
     }
 }
