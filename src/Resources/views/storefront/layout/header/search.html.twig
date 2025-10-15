@@ -1,14 +1,14 @@
-{% sw_extends '@Storefront/storefront/layout/header/search.html.twig' %}
+﻿{% sw_extends '@Storefront/storefront/layout/header/search.html.twig' %}
 
 {% block layout_header_close_button %}
     {{ parent() }}
-    <button type="button"
-            class="btn zenai-search-btn"
-            data-zenai-search-btn
-            aria-label="ZenAI search"
-        >
-        <span class="header-search-icon" title="Start AI-powered search">
-            {% sw_icon 'sparkles' style { pack: 'solid' } %}
-        </span>
-    </button>
+    <div class="zenai-search-mode">
+        <select id="zenai-search-mode"
+                class="zenai-search-select"
+                data-zenai-search-mode
+                aria-label="Select search mode">
+            <option value="ai">AI Search</option>
+            <option value="classic" selected>Classic Search</option>
+        </select>
+    </div>
 {% endblock %}
