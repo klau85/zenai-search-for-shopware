@@ -15,8 +15,8 @@
   "extra": {
     "shopware-plugin-class": "Zenai\\ZenaiSearchPlugin\\ZenaiSearchPlugin",
     "label": {
-      "en-GB": "ZenAI Search Plugin",
-      "de-DE": "ZenAI Such-Plugin"
+      "en-GB": "ZenAI Search",
+      "de-DE": "ZenAI-Suche"
     },
     "description": {
       "en-GB": "Adds ZenAI Search configuration with API token field.",

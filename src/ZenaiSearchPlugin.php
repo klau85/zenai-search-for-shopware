@@ -52,6 +52,7 @@ class ZenaiSearchPlugin extends Plugin
             ['key' => 'translations.DEFAULT.description', 'mappedKey' => 'description'],
             ['key' => 'translations.DEFAULT.name', 'mappedKey' => 'title'],
             ['key' => 'categories', 'mappedKey' => 'category'],
+            ['key' => 'price.DEFAULT.net', 'mappedKey' => 'price'],
         ];
 
         $payload = [
