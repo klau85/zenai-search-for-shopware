@@ -44,6 +44,7 @@ class ZenaiProductSearchRoute extends AbstractProductSearchRoute
             $recommendedIds = $this->recommendationClient->fetchProductIds($searchString);
 
             if ($recommendedIds !== []) {
+                $criteria->setLimit(count($recommendedIds));
                 $criteria->setTitle('zenai-overridden-search');
                 $criteria->setIds($recommendedIds);
                 $overrideSearch = true;
