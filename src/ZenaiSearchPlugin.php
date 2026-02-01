@@ -14,8 +14,8 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 
 class ZenaiSearchPlugin extends Plugin
 {
-    const string ZENAI_EXPORT_PROFILE_TECHNICAL_NAME = 'zenai_product_export';
-    const string ZENAI_EXPORT_PROFILE_LABEL = 'Zenai Product Export';
+    public const ZENAI_EXPORT_PROFILE_TECHNICAL_NAME = 'zenai_product_export';
+    public const ZENAI_EXPORT_PROFILE_LABEL = 'Zenai Product Export';
 
     public function install(InstallContext $installContext): void
     {
