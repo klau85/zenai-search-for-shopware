@@ -15,7 +15,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class ZenaiAPIClient
 {
     private const API_BASE_URL = 'https://zenaisoftware.com';
-    private const RECOMMENDATIONS_ENDPOINT = '/api/recommendations';
+    private const RECOMMENDATIONS_ENDPOINT = '/api/search';
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
