@@ -1,7 +1,7 @@
 {
   "name": "zenai/zenai-search-plugin",
   "description": "ZenAI Search integration plugin for Shopware 6.7",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "shopware-platform-plugin",
   "license": "proprietary",
   "authors": [
