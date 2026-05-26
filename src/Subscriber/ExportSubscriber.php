@@ -27,7 +27,7 @@ class ExportSubscriber implements EventSubscriberInterface
 
     public function onEnrichCriteria(EnrichExportCriteriaEvent $event): void
     {
-        if (($event->getLogEntity()->getProfileName() ?? '') !== ZenaiSearchPlugin::ZENAI_EXPORT_PROFILE_LABEL) {
+        if (($event->getLogEntity()->getProfileName() ?? '') !== ZenaiSearchPlugin::ZENAI_EXPORT_PROFILE_TECHNICAL_NAME) {
             return;
         }
 
@@ -49,7 +49,7 @@ class ExportSubscriber implements EventSubscriberInterface
 
     public function onBeforeExportRecord(ImportExportBeforeExportRecordEvent $event): void
     {
-        if ($event->getConfig()->get('profileName') !== ZenaiSearchPlugin::ZENAI_EXPORT_PROFILE_LABEL) {
+        if ($event->getConfig()->get('profileName') !== ZenaiSearchPlugin::ZENAI_EXPORT_PROFILE_TECHNICAL_NAME) {
             return;
         }
 
